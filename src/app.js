@@ -6,10 +6,33 @@ import petsRouter from './routes/pets.router.js';
 import adoptionsRouter from './routes/adoption.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 import mocksRouter from './routes/mocks.router.js'
+import mongoose from "mongoose";
+mongoose.set('strictQuery', false)
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT||8080;
-import "./database.js"
+
+//Configuramos conexion .env
+const mongoURI = process.env.MONGODB_URI;
+
+const connectDB = async () => {
+
+    try {
+        await mongoose.connect(mongoURI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("Connected to MongoDB");
+    }   catch (error) {
+        console.log("Error connecting to MongoDB", error.message);
+        process.exit(1);
+    }
+
+}
+
+connectDB();
 
 //Configuramos express
 app.use(express.json());
