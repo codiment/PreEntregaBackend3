@@ -1,5 +1,21 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 
-mongoose.connect("mongodb+srv://codiment:coderhouse@cluster0.upyu7.mongodb.net/Adoptame?retryWrites=true&w=majority&appName=Cluster0")
-.then(() => console.log("Connected to DB"))
-.catch(err => console.log(err));
+//Configuramos conexion .env
+const mongoURI = process.env.MONGODB_URI;
+mongoose.set('strictQuery', false)
+
+const connectDB = async () => {
+
+    try {
+        await mongoose.connect(mongoURI);
+        console.log("Connected to MongoDB");
+    }   catch (error) {
+        console.log("Error connecting to MongoDB", error.message);
+        process.exit(1);
+    }
+
+}
+
+export default connectDB;

@@ -6,32 +6,14 @@ import petsRouter from './routes/pets.router.js';
 import adoptionsRouter from './routes/adoption.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 import mocksRouter from './routes/mocks.router.js'
-import mongoose from "mongoose";
-mongoose.set('strictQuery', false)
-import dotenv from "dotenv";
-dotenv.config();
+import configureSwagger from "./swagger/swagger.js";
+import connectDB from "./database.js";
 
+//Configuramos express y el puerto
 const app = express();
 const PORT = process.env.PORT||8080;
 
-//Configuramos conexion .env
-const mongoURI = process.env.MONGODB_URI;
-
-const connectDB = async () => {
-
-    try {
-        await mongoose.connect(mongoURI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log("Connected to MongoDB");
-    }   catch (error) {
-        console.log("Error connecting to MongoDB", error.message);
-        process.exit(1);
-    }
-
-}
-
+//Nos conectamos a la base de datos
 connectDB();
 
 //Configuramos express
@@ -47,6 +29,7 @@ app.use('/api/adoptions',adoptionsRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use('/api/mocks', mocksRouter);
 
-
+//Configuramos swagger
+configureSwagger(app);
 
 app.listen(PORT,()=>console.log(`Listening on ${PORT}`))

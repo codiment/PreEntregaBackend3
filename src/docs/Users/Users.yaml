@@ -1,0 +1,163 @@
+paths:
+  # Obtenemos los usuarios de la base de datos.
+  /api/users:
+    get:
+      summary: Obtenemos todos los usuarios de la BD.
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Obtienen todos los usuarios correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Error interno del servidor.
+    # Creamos un nuevo usuario.
+    post:
+      summary: Este endpoint crea un usuario.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/createUser'
+      responses:
+        '201':
+          description: Usuario creado correctamente.
+        '500':
+          description: Error interno del servidor.
+
+  # Buscamos, actualizamos o eliminamos un usuario por ID.
+  /api/users/{uid}:
+    get:
+      summary: Obtiene un solo usuario por ID.
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario que se quiere buscar.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: Error interno del servidor.
+
+    put:
+      summary: Actualizamos usuarios por ID.
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario que se quiere actualizar.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/updateUser'
+      responses:
+        '200':
+          description: Usuario actualizado correctamente.
+        '500':
+          description: Error interno del servidor.
+
+    delete:
+      summary: Elimina un usuario por ID.
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario que se quiere eliminar.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario eliminado correctamente.
+        '500':
+          description: Error interno del servidor.
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID autogenerado por MongoDB.
+        first_name:
+          type: string
+          description: Nombre del usuario.
+        last_name:
+          type: string
+          description: Apellido del usuario.
+        password:
+          type: string
+          description: Contraseña del usuario.
+      example:
+        _id: '123456'
+        first_name: Tinki
+        last_name: Winki
+        password: '1234'
+
+  requestBodies:
+    createUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Nombre de usuario.
+        last_name:
+          type: string
+          description: Apellido del usuario.
+        password:
+          type: string
+          description: Contraseña del usuario.
+        email:
+          type: string
+          description: Email del usuario.
+      example:
+        first_name: Mirtha
+        last_name: Legrand
+        password: '1234'
+        email: chiqui@legrand.com
+
+    updateUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Nombre de usuario.
+        last_name:
+          type: string
+          description: Apellido del usuario.
+        password:
+          type: string
+          description: Contraseña del usuario.
+        email:
+          type: string
+          description: Email del usuario.
+      example:
+        first_name: Mirtha
+        last_name: Legrand
+        password: '1234'
+        email: chiqui@legrand.com
